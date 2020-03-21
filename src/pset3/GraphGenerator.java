@@ -25,8 +25,10 @@ public class GraphGenerator {
 					cfg.addEdge(position, -1, m, jc);
 				} else if(inst instanceof BranchInstruction) {
 					BranchInstruction branchInstruction = (BranchInstruction) inst;
-					int nextPosition = branchInstruction.getTarget().getPosition();
-					cfg.addEdge(position, m, jc, nextPosition, m, jc);	
+					int branchPosition = branchInstruction.getTarget().getPosition();
+					cfg.addEdge(position, branchPosition, m, jc);
+					int nextPosition = ih.getNext().getPosition();
+					cfg.addEdge(position, nextPosition, m, jc);
 				} else {
 					int nextPosition = ih.getNext().getPosition();
 					cfg.addEdge(position, nextPosition, m, jc);
