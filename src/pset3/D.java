@@ -11,5 +11,5 @@ public class D {
 		bar(a);
 	}
 
-		static void bar(String[] a) {}
+	static void bar(String[] a) {}
 }

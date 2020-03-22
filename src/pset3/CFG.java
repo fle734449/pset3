@@ -73,9 +73,46 @@ public class CFG {
 			return nodes.size() + " nodes\n" + "nodes: " + nodes + '\n' + "edges: " + edges;
 		}
 
-		public boolean isReachable(String methodFrom, String clazzFrom,
-				String methodTo, String clazzTo) {
-					return false;
+		public boolean isReachable(String methodFrom, String clazzFrom, String methodTo, String clazzTo) {
 			// you will implement this method in Question 2.2
+			
+			boolean exists = false;
+			Node start = new Node(0, null, null);
+			for(Node n: nodes) {
+				if((n.position == 0) && n.getMethod().getName().equals(methodFrom) && n.getClazz().getClassName().equals(clazzFrom)) {
+					start = n;
+					exists = true;
+					break;
+				}
+			}
+			
+			//check if method exists
+			if(!exists) {
+				return false;
+			}
+			
+			//if node to reach is itself
+			if(methodFrom.equals(methodTo) && clazzFrom.equals(clazzTo)) {
+				return true;
+			}
+			
+			Set<Node> visited = new HashSet<>();	// store visited nodes 
+	        Queue<Node> queue = new LinkedList<>();
+	        visited.add(start);
+	        queue.add(start);
+	        while(!queue.isEmpty()) {
+	        	Node node = queue.remove();
+	        	if(node.getMethod().getName().equals(methodTo) && node.getClazz().getClassName().equals(clazzTo)) {
+	        		return true;
+	        	}
+	        	for(Node neighbor: edges.get(node)) {
+	        		if(!visited.contains(neighbor) && neighbor.position != -1) {
+	        			visited.add(neighbor);
+	        			queue.add(neighbor);
+	        		}
+	        	}
+	        	
+	        }
+			return false;
 		}
 	}

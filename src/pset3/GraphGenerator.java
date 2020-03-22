@@ -82,7 +82,43 @@ public class GraphGenerator {
 		CFG cfg = gg.createCFG("pset3.C"); // example invocation of createCFG
 		System.out.println(cfg.toString());
 		System.out.println();
+		
 		CFG cfg2 = gg.createCFGWithMethodInvocation("pset3.D"); // example invocation of createCFGWithMethodInovcation
 		System.out.println(cfg2.toString());
+		System.out.println();
+		
+		System.out.println("Testing methods reachable from main:");
+		System.out.println(cfg2.isReachable("main", "pset3.D", "main", "pset3.D"));		//main -> main; true
+		System.out.println(cfg2.isReachable("main", "pset3.D", "foo", "pset3.D"));		//main -> foo; true
+		System.out.println(cfg2.isReachable("main", "pset3.D", "bar", "pset3.D"));		//main -> bar; true
+		System.out.println(cfg2.isReachable("main", "pset3.D", "<init>", "pset3.D"));	//main -> <init>; false
+		System.out.println();
+		
+		System.out.println("Testing methods reachable from <init>:");
+		System.out.println(cfg2.isReachable("<init>", "pset3.D", "<init>", "pset3.D"));	//<init> -> <init>; true
+		System.out.println(cfg2.isReachable("<init>", "pset3.D", "main", "pset3.D"));	//<init> -> main; false
+		System.out.println(cfg2.isReachable("<init>", "pset3.D", "foo", "pset3.D"));	//<init> -> foo; false
+		System.out.println(cfg2.isReachable("<init>", "pset3.D", "bar", "pset3.D"));	//<init> -> bar; false
+		System.out.println();
+		
+		System.out.println("Testing methods reachable from foo:");
+		System.out.println(cfg2.isReachable("foo", "pset3.D", "foo", "pset3.D"));		//foo -> foo; true
+		System.out.println(cfg2.isReachable("foo", "pset3.D", "main", "pset3.D"));		//foo -> main; false
+		System.out.println(cfg2.isReachable("foo", "pset3.D", "bar", "pset3.D"));		//foo -> bar; true
+		System.out.println(cfg2.isReachable("foo", "pset3.D", "<init>", "pset3.D"));	//foo -> <init>; false	
+		System.out.println();
+		
+		System.out.println("Testing methods reachable from bar:");
+		System.out.println(cfg2.isReachable("bar", "pset3.D", "bar", "pset3.D"));		//bar -> bar; true
+		System.out.println(cfg2.isReachable("bar", "pset3.D", "main", "pset3.D"));		//bar -> main; false
+		System.out.println(cfg2.isReachable("bar", "pset3.D", "foo", "pset3.D"));		//bar -> foo; false
+		System.out.println(cfg2.isReachable("bar", "pset3.D", "<init>", "pset3.D"));	//bar -> <init>; false
+		System.out.println();
+		
+		System.out.println("Edge cases:");
+		System.out.println(cfg2.isReachable("main", "pset3.D", "boss", "pset3.D"));		//methodTo doesn't exist; false
+		System.out.println(cfg2.isReachable("boss", "pset3.D", "main", "pset3.D"));		//methodFrom doesn't exist; false
+		System.out.println(cfg2.isReachable("boss", "pset3.D", "boss", "pset3.D"));		//methods don't exist; false
+		System.out.println();
 	}
 }
