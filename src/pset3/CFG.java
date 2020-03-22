@@ -96,18 +96,35 @@ public class CFG {
 				return true;
 			}
 			
-			Set<Node> visited = new HashSet<>();	// store visited nodes 
+			Map<Node, Node> visited = new HashMap<>();	// store visited nodes in <child, parent> pairs
 	        Queue<Node> queue = new LinkedList<>();
-	        visited.add(start);
+	        visited.put(start, null);
 	        queue.add(start);
 	        while(!queue.isEmpty()) {
 	        	Node node = queue.remove();
+	        	if(node.position == -1 && node.getMethod().getName().equals(methodFrom) && node.getClazz().getClassName().equals(clazzFrom)) {
+	        		node = queue.peek();
+	        		if(node != null) {
+	        			node = queue.remove();
+	        		} else {
+	        			break;
+	        		}
+	        	}
 	        	if(node.getMethod().getName().equals(methodTo) && node.getClazz().getClassName().equals(clazzTo)) {
-	        		return true;
+	        		if(visited.get(node).position != -1) {
+	        			return true;
+	        		} else {
+	        			node = queue.peek();
+	        			if(node != null) {
+	        				node = queue.remove();
+	        			} else {
+	        				break;
+	        			}
+	        		}
 	        	}
 	        	for(Node neighbor: edges.get(node)) {
-	        		if(!visited.contains(neighbor) && neighbor.position != -1) {
-	        			visited.add(neighbor);
+	        		if(!visited.containsKey(neighbor)) {
+	        			visited.put(neighbor, node);
 	        			queue.add(neighbor);
 	        		}
 	        	}
